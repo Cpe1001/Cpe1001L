@@ -104,7 +104,7 @@ def divide_command(result_reg, operand1_reg, operand2_reg):
             registers[result_reg] = registers[operand1_reg] / registers[operand2_reg]
         else:
             raise ZeroDivisionError("Division by zero error")
-        
+
 def display_green():
     sense.clear(0, 255, 0)
     
@@ -113,69 +113,72 @@ def display_red():
 
 file_name = sys.argv[1]
 
-with open(file_name, 'r') as file:
-    for line in file:
-        line = line.strip()
-        print("Command:", line)
+try:
+    with open(file_name, 'r') as file:
+        for line in file:
+            line = line.strip()
+            print("Command:", line)
 
-        words = line.split()
-        cleaned_words = []
-        for word in words:
-            if word.isdigit():
-                cleaned_words.append(word)
-            else:
-                cleaned_word = word.translate(str.maketrans('', '', string.punctuation))
-                cleaned_words.append(cleaned_word)
-
-        for i, cleaned_word in enumerate(cleaned_words):
-            if cleaned_word in word_definitions:
-                print(cleaned_word, "-", word_definitions[cleaned_word])
-            else:
-                if cleaned_word.isdigit():
-                    print(cleaned_word, "-", cleaned_word)
+            words = line.split()
+            cleaned_words = []
+            for word in words:
+                if word.isdigit():
+                    cleaned_words.append(word)
                 else:
-                    print(cleaned_word)
+                    cleaned_word = word.translate(str.maketrans('', '', string.punctuation))
+                    cleaned_words.append(cleaned_word)
 
-        if len(cleaned_words) >= 3 and cleaned_words[0] == "MOVE":
-            destination = cleaned_words[1]
-            value = cleaned_words[2]
-            move_command(destination, value)
-        if len(cleaned_words) >= 3 and cleaned_words[0] == "STORE":
-            register = cleaned_words[1]
-            destination = cleaned_words[2]
-            store_command(register, destination)
-        if len(cleaned_words) >= 3 and cleaned_words[0] == "LOAD":
-            destination = cleaned_words[1]
-            value = cleaned_words[2]
-            load_command(destination, value)
-        if len(cleaned_words) >= 4 and cleaned_words[0] == "ADD":
+            for i, cleaned_word in enumerate(cleaned_words):
+                if cleaned_word in word_definitions:
+                    print(cleaned_word, "-", word_definitions[cleaned_word])
+                else:
+                    if cleaned_word.isdigit():
+                        print(cleaned_word, "-", cleaned_word)
+                    else:
+                        print(cleaned_word)
+
+            if len(cleaned_words) >= 3 and cleaned_words[0] == "MOVE":
+                destination = cleaned_words[1]
+                value = cleaned_words[2]
+                move_command(destination, value)
+            if len(cleaned_words) >= 3 and cleaned_words[0] == "STORE":
+                register = cleaned_words[1]
+                destination = cleaned_words[2]
+                store_command(register, destination)
+            if len(cleaned_words) >= 3 and cleaned_words[0] == "LOAD":
+                destination = cleaned_words[1]
+                value = cleaned_words[2]
+                load_command(destination, value)
+            if len(cleaned_words) >= 4 and cleaned_words[0] == "ADD":
                 result_reg = cleaned_words[1]
                 operand1_reg = cleaned_words[2]
                 operand2_reg = cleaned_words[3]
                 add_command(result_reg, operand1_reg, operand2_reg)
-        if len(cleaned_words) >= 4 and cleaned_words[0] == "SUBTRACT":
+            if len(cleaned_words) >= 4 and cleaned_words[0] == "SUBTRACT":
                 result_reg = cleaned_words[1]
                 operand1_reg = cleaned_words[2]
                 operand2_reg = cleaned_words[3]
                 subtract_command(result_reg, operand1_reg, operand2_reg)
-        if len(cleaned_words) >= 4 and cleaned_words[0] == "MULTIPLY":
+            if len(cleaned_words) >= 4 and cleaned_words[0] == "MULTIPLY":
                 result_reg = cleaned_words[1]
                 operand1_reg = cleaned_words[2]
                 operand2_reg = cleaned_words[3]
                 multiply_command(result_reg, operand1_reg, operand2_reg)
-        if len(cleaned_words) >= 4 and cleaned_words[0] == "DIVIDE":
+            if len(cleaned_words) >= 4 and cleaned_words[0] == "DIVIDE":
                 result_reg = cleaned_words[1]
                 operand1_reg = cleaned_words[2]
                 operand2_reg = cleaned_words[3]
                 divide_command(result_reg, operand1_reg, operand2_reg)
-        
-        print("\nRegister")
-        print(registers_table(registers))
-        
-        print("\nData Memory")
-        print(data_memory_table(data_memory))
-        
-        display_green()
-    
+            
+            print("\nRegister")
+            print(registers_table(registers))
+            
+            print("\nData Memory")
+            print(data_memory_table(data_memory))
+            
+            display_green()
+
 except ZeroDivisionError:
-display_red()
+    display_red()
+except Exception as e:
+    display_red()
