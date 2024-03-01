@@ -1,2 +1,2 @@
-MOV R0, 2
+MOVE R3, 10
 ADD R1, R0, R0
