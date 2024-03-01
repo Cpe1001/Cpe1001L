@@ -78,6 +78,33 @@ def move_command(destination, value):
     if destination in registers and value.isdigit():
         registers[destination] = int(value)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def store_command(register,destination):
     if register in registers and destination in data_memory:
         data_memory[destination] = registers[register]
