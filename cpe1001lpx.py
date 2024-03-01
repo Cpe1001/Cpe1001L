@@ -1,5 +1,8 @@
 import sys
 import string
+from sense_hat import SenseHat
+
+sense = SenseHat()
 
 word_definitions = {
     "MOVE": "Move to a specified location",
@@ -83,6 +86,12 @@ def load_command(destination, value):
     if destination in registers and value in registers:
         registers[destination] = registers[value]
 
+def display_green():
+    sense.clear(0, 255, 0)
+    
+def display_red():
+    sense.clear(255, 0, 0)
+
 file_name = sys.argv[1]
 
 with open(file_name, 'r') as file:
@@ -99,7 +108,6 @@ with open(file_name, 'r') as file:
                 cleaned_word = word.translate(str.maketrans('', '', string.punctuation))
                 cleaned_words.append(cleaned_word)
 
-        print("Parsed words with definitions:")
         for i, cleaned_word in enumerate(cleaned_words):
             if cleaned_word in word_definitions:
                 print(cleaned_word, "-", word_definitions[cleaned_word])
@@ -127,3 +135,8 @@ with open(file_name, 'r') as file:
         
         print("\nData Memory")
         print(data_memory_table(data_memory))
+        
+        display_green()
+    
+except Exception as e:
+display_red()
