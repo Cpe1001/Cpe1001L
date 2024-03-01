@@ -74,12 +74,14 @@ def data_memory_table(data_memory):
 def move_command(destination, value):
     if destination in registers and value.isdigit():
         registers[destination] = int(value)
-    else:
-        print("Invalid MOVE.")
 
 def store_command(register,destination):
     if register in registers and destination in data_memory:
         data_memory[destination] = registers[register]
+        
+def load_command(destination, value):
+    if destination in registers and value in registers:
+        registers[destination] = registers[value]
 
 file_name = sys.argv[1]
 
@@ -115,6 +117,10 @@ with open(file_name, 'r') as file:
             register = cleaned_words[1]
             destination = cleaned_words[2]
             store_command(register, destination)
+        if len(cleaned_words) >= 3 and cleaned_words[0] == "LOAD":
+            destination = cleaned_words[1]
+            value = cleaned_words[2]
+            load_command(destination, value)
         
         print("\nRegister")
         print(registers_table(registers))
