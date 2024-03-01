@@ -1,2 +1,3 @@
 MOVE R3, 10
 ADD R1, R0, R0
+STORE R3 [D0]

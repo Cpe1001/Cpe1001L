@@ -45,7 +45,7 @@ data_memory = {
     "D9": 0,
 }
 
-def generate_registers_table(registers):
+def registers_table(registers):
     registers_table = (
         "+-----------+\n"
         "| REGISTERS |\n"
@@ -58,13 +58,28 @@ def generate_registers_table(registers):
     registers_table += "+-----------+"
     return registers_table
 
+def data_memory_table(data_memory):
+    data_memory_table = (
+        "+-------------+\n"
+        "| DATA MEMORY |\n"
+        "+-------------+\n"
+    )
+
+    for slot, value in data_memory.items():
+        data_memory_table += f"| {slot}: {value:<8} |\n"
+
+    data_memory_table += "+-------------+"
+    return data_memory_table
+
 def move_command(destination, value):
     if destination in registers and value.isdigit():
         registers[destination] = int(value)
     else:
         print("Invalid MOVE.")
 
-def store_command(register, )
+def store_command(register,destination):
+    if register in registers and destination in data_memory:
+        data_memory[destination] = registers[register]
 
 file_name = sys.argv[1]
 
@@ -96,6 +111,13 @@ with open(file_name, 'r') as file:
             destination = cleaned_words[1]
             value = cleaned_words[2]
             move_command(destination, value)
-
-        print("\nRegisters Table after Command:")
-        print(generate_registers_table(registers))
+        if len(cleaned_words) >= 3 and cleaned_words[0] == "STORE":
+            register = cleaned_words[1]
+            destination = cleaned_words[2]
+            store_command(register, destination)
+        
+        print("\nRegister")
+        print(registers_table(registers))
+        
+        print("\nData Memory")
+        print(data_memory_table(data_memory))
