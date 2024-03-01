@@ -78,33 +78,6 @@ def move_command(destination, value):
     if destination in registers and value.isdigit():
         registers[destination] = int(value)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def store_command(register,destination):
     if register in registers and destination in data_memory:
         data_memory[destination] = registers[register]
@@ -113,6 +86,25 @@ def load_command(destination, value):
     if destination in registers and value in registers:
         registers[destination] = registers[value]
 
+def add_command(result_reg, operand1_reg, operand2_reg):
+    if all(reg in registers for reg in [result_reg, operand1_reg, operand2_reg]):
+        registers[result_reg] = registers[operand1_reg] + registers[operand2_reg]
+
+def subtract_command(result_reg, operand1_reg, operand2_reg):
+    if all(reg in registers for reg in [result_reg, operand1_reg, operand2_reg]):
+        registers[result_reg] = registers[operand1_reg] - registers[operand2_reg]
+
+def multiply_command(result_reg, operand1_reg, operand2_reg):
+    if all(reg in registers for reg in [result_reg, operand1_reg, operand2_reg]):
+        registers[result_reg] = registers[operand1_reg] * registers[operand2_reg]
+
+def divide_command(result_reg, operand1_reg, operand2_reg):
+    if all(reg in registers for reg in [result_reg, operand1_reg, operand2_reg]):
+        if registers[operand2_reg] != 0:
+            registers[result_reg] = registers[operand1_reg] / registers[operand2_reg]
+        else:
+            raise ZeroDivisionError("Division by zero error")
+        
 def display_green():
     sense.clear(0, 255, 0)
     
@@ -156,6 +148,26 @@ with open(file_name, 'r') as file:
             destination = cleaned_words[1]
             value = cleaned_words[2]
             load_command(destination, value)
+        if len(cleaned_words) >= 4 and cleaned_words[0] == "ADD":
+                result_reg = cleaned_words[1]
+                operand1_reg = cleaned_words[2]
+                operand2_reg = cleaned_words[3]
+                add_command(result_reg, operand1_reg, operand2_reg)
+        if len(cleaned_words) >= 4 and cleaned_words[0] == "SUBTRACT":
+                result_reg = cleaned_words[1]
+                operand1_reg = cleaned_words[2]
+                operand2_reg = cleaned_words[3]
+                subtract_command(result_reg, operand1_reg, operand2_reg)
+        if len(cleaned_words) >= 4 and cleaned_words[0] == "MULTIPLY":
+                result_reg = cleaned_words[1]
+                operand1_reg = cleaned_words[2]
+                operand2_reg = cleaned_words[3]
+                multiply_command(result_reg, operand1_reg, operand2_reg)
+        if len(cleaned_words) >= 4 and cleaned_words[0] == "DIVIDE":
+                result_reg = cleaned_words[1]
+                operand1_reg = cleaned_words[2]
+                operand2_reg = cleaned_words[3]
+                divide_command(result_reg, operand1_reg, operand2_reg)
         
         print("\nRegister")
         print(registers_table(registers))
@@ -165,5 +177,5 @@ with open(file_name, 'r') as file:
         
         display_green()
     
-except Exception as e:
+except ZeroDivisionError:
 display_red()
